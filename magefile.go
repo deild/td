@@ -60,5 +60,6 @@ func Lint() error {
 
 // Run tests
 func Test() error {
+	fmt.Println("+ test")
 	return sh.Run("vgo", "test", "-test.v", "./...")
 }

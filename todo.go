@@ -10,8 +10,12 @@ import (
 	p "github.com/deild/td/printer"
 )
 
+// Done Todo status
+const Done = "done"
+
+//Todo todo's structure
 type Todo struct {
-	Id       int64  `json:"id"`
+	ID       int64  `json:"id"`
 	Desc     string `json:"desc"`
 	Status   string `json:"status"`
 	Modified string `json:"modified"`
@@ -23,12 +27,13 @@ func NewTodo() *Todo {
 	return todo
 }
 
+// MakeOutput print todo
 func (t *Todo) MakeOutput(useColor bool) {
 	var symbole string
 	var color ct.Color
 
 	switch t.Status {
-	case "done":
+	case Done:
 		color = ct.Green
 		symbole = p.OkSign
 	case "wip":
@@ -39,11 +44,11 @@ func (t *Todo) MakeOutput(useColor bool) {
 		symbole = p.KoSign
 	}
 
-	hashtagReg := regexp.MustCompile("#[^\\s]*")
+	hashtagReg := regexp.MustCompile(`#[^\\s]*`)
 
-	spaceCount := 6 - len(strconv.FormatInt(t.Id, 10))
+	spaceCount := 6 - len(strconv.FormatInt(t.ID, 10))
 
-	fmt.Print(strings.Repeat(" ", spaceCount), t.Id, " | ")
+	fmt.Print(strings.Repeat(" ", spaceCount), t.ID, " | ")
 	if useColor {
 		ct.ChangeColor(color, false, ct.None, false)
 	}

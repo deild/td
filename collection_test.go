@@ -13,9 +13,9 @@ func TestListPendingTodos(t *testing.T) {
 
 	for id := range make([]int, len(statuses)) {
 		task := NewTodo()
-		task.Id = int64(id)
+		task.ID = int64(id)
 		task.Status = statuses[id]
-		task.Desc = fmt.Sprintf("This is task number %d as %s", task.Id, task.Status)
+		task.Desc = fmt.Sprintf("This is task number %d as %s", task.ID, task.Status)
 		todos = append(todos, task)
 	}
 	collection.Todos = todos
@@ -38,7 +38,7 @@ func TestListUndoneTodos(t *testing.T) {
 
 	for id := range make([]int, len(statuses)) {
 		task := NewTodo()
-		task.Id = int64(id)
+		task.ID = int64(id)
 		task.Status = statuses[id]
 		todos = append(todos, task)
 	}
@@ -62,9 +62,9 @@ func TestListWorkInProgressTodos(t *testing.T) {
 
 	for id := range make([]int, len(statuses)) {
 		task := NewTodo()
-		task.Id = int64(id)
+		task.ID = int64(id)
 		task.Status = statuses[id]
-		task.Desc = fmt.Sprintf("This is task number %d as %s", task.Id, task.Status)
+		task.Desc = fmt.Sprintf("This is task number %d as %s", task.ID, task.Status)
 		todos = append(todos, task)
 	}
 	collection.Todos = todos
@@ -87,7 +87,7 @@ func TestListDoneTodos(t *testing.T) {
 
 	for id := range make([]int, len(statuses)) {
 		task := NewTodo()
-		task.Id = int64(id)
+		task.ID = int64(id)
 		task.Status = statuses[id]
 		todos = append(todos, task)
 	}
@@ -111,7 +111,7 @@ func TestToggleStatus(t *testing.T) {
 	var todos []*Todo
 
 	task := NewTodo()
-	task.Id = 1
+	task.ID = 1
 	task.Status = PENDING
 	todos = append(todos, task)
 	collection.Todos = todos
@@ -137,7 +137,7 @@ func TestSetStatus(t *testing.T) {
 	var todos []*Todo
 
 	task := NewTodo()
-	task.Id = 1
+	task.ID = 1
 	task.Status = PENDING
 	todos = append(todos, task)
 	collection.Todos = todos
@@ -168,7 +168,7 @@ func TestTodoModifyDescription(t *testing.T) {
 
 	for id := range make([]int, len(oldDesc)) {
 		task := NewTodo()
-		task.Id = int64(id)
+		task.ID = int64(id)
 		task.Desc = oldDesc[id]
 		todos = append(todos, task)
 	}
@@ -200,7 +200,7 @@ func TestTodoSwap(t *testing.T) {
 
 	for id := range make([]int, len(taskDesc)) {
 		task := NewTodo()
-		task.Id = int64(id + 1)
+		task.ID = int64(id + 1)
 		task.Desc = taskDesc[id]
 		todos = append(todos, task)
 	}
@@ -241,7 +241,7 @@ func TestRemoveAtIndex(t *testing.T) {
 
 	for id := range make([]int, len(taskDesc)) {
 		task := NewTodo()
-		task.Id = int64(id + 1)
+		task.ID = int64(id + 1)
 		task.Desc = taskDesc[id]
 		todos = append(todos, task)
 	}

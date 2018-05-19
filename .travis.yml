@@ -1,12 +1,12 @@
 language: go
-go: 1.10.2
+go: 1.10.x
 before_install:
   - go get github.com/magefile/mage
   - mage getvgo
 #  - go get github.com/tcnksm/ghr
 
 script:
-  - mage test ./...
+  - mage -v test
 
 after_success:
   - mage all

@@ -2,7 +2,7 @@ package main
 
 func ExampleTodo() {
 	todo := Todo{
-		Id:       0,
+		ID:       0,
 		Desc:     "Test td",
 		Status:   "pending",
 		Modified: "",
