@@ -10,11 +10,13 @@ import (
 	"github.com/urfave/cli"
 )
 
+const version = "1.4.0"
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "td"
 	app.Usage = "Your todos manager"
-	app.Version = "1.4.0"
+	app.Version = version
 	app.Compiled = time.Now()
 	app.Authors = []cli.Author{
 		cli.Author{
@@ -22,6 +24,7 @@ func main() {
 			Email: "gael@gaelgillard.com",
 		},
 	}
+
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
 			Name:  "done, d",
@@ -263,6 +266,7 @@ func main() {
 			Action: func(c *cli.Context) error {
 
 				collection, err := NewCollection()
+
 				if err != nil {
 					return exitError(err)
 				}

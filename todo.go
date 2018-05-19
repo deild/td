@@ -44,22 +44,22 @@ func (t *Todo) MakeOutput(useColor bool) {
 	spaceCount := 6 - len(strconv.FormatInt(t.Id, 10))
 
 	fmt.Print(strings.Repeat(" ", spaceCount), t.Id, " | ")
-	if useColor == true {
+	if useColor {
 		ct.ChangeColor(color, false, ct.None, false)
 	}
 	fmt.Print(symbole)
-	if useColor == true {
+	if useColor {
 		ct.ResetColor()
 	}
 	fmt.Print(" ")
 	pos := 0
 	for _, token := range hashtagReg.FindAllStringIndex(t.Desc, -1) {
 		fmt.Print(t.Desc[pos:token[0]])
-		if useColor == true {
+		if useColor {
 			ct.ChangeColor(ct.Yellow, false, ct.None, false)
 		}
 		fmt.Print(t.Desc[token[0]:token[1]])
-		if useColor == true {
+		if useColor {
 			ct.ResetColor()
 		}
 		pos = token[1]
