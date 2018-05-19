@@ -1,4 +1,4 @@
-# td [![Build Status](https://travis-ci.org/Swatto/td.svg?branch=master)](https://travis-ci.org/Swatto/td)
+# td [![Travis](https://travis-ci.org/deild/td.svg?branch=master)](https://travis-ci.org/deild/td) [![GitHub Release](https://img.shields.io/github/release/deild/td.svg?style=flat)](https://github.com/deild/td/releases/latest) [![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](http://godoc.org/github.com/deild/td) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/deild/td)](https://goreportcard.com/report/github.com/deild/td)
 
 > Your todo list in your terminal.
 >
@@ -8,8 +8,8 @@
 
 ### Installation
 
-- From *binary*: go to the [release page](https://github.com/Swatto/td/releases)
-- From *source*: `go get github.com/Swatto/td`
+- From *binary*: go to the [release page](https://github.com/deild/td/releases)
+- From *source*: `go get github.com/deild/td`
 
 ### Information
 
@@ -19,7 +19,7 @@ If it doesn't find a `.todos`, *td* use an environment variable to store your to
 
 ### CLI
 
-```
+```sh
 NAME:
    td - Your todos manager
 
@@ -49,27 +49,3 @@ GLOBAL OPTIONS:
    --help, -h     show help
    --version, -v  print the version
 ```
-
-## License
-
-The MIT License (MIT)
-
-Copyright (c) 2015 Gaël Gillard
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
