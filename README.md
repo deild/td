@@ -2,6 +2,7 @@
 
 [![GitHub Release](https://img.shields.io/github/release/deild/td.svg)](https://github.com/deild/td/releases/latest)
 [![Travis](https://travis-ci.org/deild/td.svg?branch=master)](https://travis-ci.org/deild/td)
+[![Coverage Status](https://coveralls.io/repos/github/deild/td/badge.svg?branch=master)](https://coveralls.io/github/deild/td?branch=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/deild/td/badge)](https://www.codefactor.io/repository/github/deild/td)
 [![Go Report Card](https://goreportcard.com/badge/github.com/deild/td)](https://goreportcard.com/report/github.com/deild/td)
 [![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg)](http://godoc.org/github.com/deild/td)
