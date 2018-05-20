@@ -12,6 +12,7 @@ import (
 )
 
 var (
+	// nolint
 	Default   = Build
 	version   = "snapshot"
 	buildDate = time.Now().UTC().Format(time.RFC3339)
@@ -19,7 +20,7 @@ var (
 )
 
 // Start by installing vgo
-func Getvgo() error {
+func Getvgo() error { // nolint: deadcode
 	fmt.Println("+ get vgo")
 	return sh.Run("go", "get", "-u", "golang.org/x/vgo")
 }
@@ -31,7 +32,7 @@ func Build() error {
 }
 
 // Clean up after yourself
-func Clean() {
+func Clean() { // nolint: deadcode
 	fmt.Println("+ clean")
 	err := os.RemoveAll("td")
 	if err != nil {
@@ -51,34 +52,45 @@ func getgox() error {
 	return sh.Run("go", "get", "-u", "github.com/mitchellh/gox")
 }
 
-// Build binary for all os
-func All() error {
-	mg.Deps(getgox)
+// Test, Lint and Build binary for all os
+func All() error { // nolint: deadcode
+	mg.Deps(Lint, Test, getgox)
 	fmt.Println("+ all")
 	return sh.Run("gox", "-os=linux", "-os=windows", "-os=darwin", "-arch=amd64", "-output=build/{{.Dir}}_{{.OS}}_{{.Arch}}", "-ldflags", ldflags())
 }
 
 func getLint() error {
-	return sh.Run("go", "get", "-u", "github.com/golang/lint/golint")
+	if err := sh.Run("go", "get", "-u", "gopkg.in/alecthomas/gometalinter.v2"); err != nil {
+		return err
+	}
+	return sh.Run("gometalinter.v2", "--install")
+}
+
+func getVendor() error {
+	return sh.Run("vgo", "vendor")
 }
 
 // Run Go Linter
-func Lint() error {
-	mg.Deps(getLint)
+func Lint() error { // nolint: deadcode
+	mg.Deps(getLint, getVendor)
 	fmt.Println("+ lint")
-	out, err := sh.Output("golint", "./...")
-	fmt.Println(out)
-	return err
+	if out, err := sh.Output("gometalinter.v2", "--errors", "./..."); out != "" {
+		fmt.Println(out)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // Run tests
-func Test() error {
+func Test() error { // nolint: deadcode
 	fmt.Println("+ test")
 	return sh.Run("vgo", "test", "./...")
 }
 
 // Install myapp binary
-func Install() error {
+func Install() error { // nolint: deadcode
 	fmt.Println("+ install")
 	return sh.Run("vgo", "install", "-ldflags", ldflags(), ".")
 }

@@ -1,10 +1,12 @@
 # td
 
-[![GitHub Release](https://img.shields.io/github/release/deild/td.svg?style=flat)](https://github.com/deild/td/releases/latest)
+[![GitHub Release](https://img.shields.io/github/release/deild/td.svg)](https://github.com/deild/td/releases/latest)
 [![Travis](https://travis-ci.org/deild/td.svg?branch=master)](https://travis-ci.org/deild/td)
+[![CodeFactor](https://www.codefactor.io/repository/github/deild/td/badge)](https://www.codefactor.io/repository/github/deild/td)
 [![Go Report Card](https://goreportcard.com/badge/github.com/deild/td)](https://goreportcard.com/report/github.com/deild/td)
-[![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](http://godoc.org/github.com/deild/td)
+[![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg)](http://godoc.org/github.com/deild/td)
 [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![SemVer](https://img.shields.io/badge/semver-2.0.0-blue.svg)](https://semver.org/)
 
 > Your todo list in your terminal.
 >

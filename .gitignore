@@ -3,3 +3,4 @@ td
 build
 .todos
 dist
+vendor
