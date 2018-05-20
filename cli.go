@@ -251,7 +251,7 @@ func main() {
 				}
 
 				ct.ChangeColor(ct.Cyan, false, ct.None, false)
-				fmt.Printf("Your todo is now %s.\n", status)
+				fmt.Printf("Your todo %d is now %s.\n", id, status)
 				ct.ResetColor()
 				return nil
 			},
@@ -299,6 +299,7 @@ func main() {
 				}
 
 				exact := c.Bool("exact")
+
 				if exact {
 					ids := make([]int64, len(c.Args()))
 					for i, sid := range c.Args() {
@@ -308,15 +309,13 @@ func main() {
 						}
 						ids[i] = id
 					}
-
 					if err := collection.ReorderByIDs(ids); err != nil {
 						return exitError(err)
 					}
+				}
 
-				} else {
-					if err := collection.Reorder(); err != nil {
-						return exitError(err)
-					}
+				if err := collection.Reorder(); err != nil {
+					return exitError(err)
 				}
 
 				if err := collection.WriteTodos(); err != nil {
@@ -336,7 +335,7 @@ func main() {
 			UsageText: "td swap 9 3",
 			Action: func(c *cli.Context) error {
 
-				if len(c.Args()) != 1 {
+				if len(c.Args()) != 2 {
 					return exitError(
 						fmt.Errorf("You must provide two position if you want to swap todos.\nUsage: %s", c.Command.UsageText))
 				}

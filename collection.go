@@ -191,7 +191,7 @@ func (c *Collection) Modify(id int64, desc string) (*Todo, error) {
 }
 
 func (c *Collection) RemoveFinishedTodos() error {
-	return c.ListPendingTodos()
+	return c.ListUndoneTodos()
 }
 
 func (c *Collection) Reorder() error {
