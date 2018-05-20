@@ -1,4 +1,10 @@
-# td [![Travis](https://travis-ci.org/deild/td.svg?branch=master)](https://travis-ci.org/deild/td) [![GitHub Release](https://img.shields.io/github/release/deild/td.svg?style=flat)](https://github.com/deild/td/releases/latest) [![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](http://godoc.org/github.com/deild/td) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/deild/td)](https://goreportcard.com/report/github.com/deild/td)
+# td
+
+[![GitHub Release](https://img.shields.io/github/release/deild/td.svg?style=flat)](https://github.com/deild/td/releases/latest)
+[![Travis](https://travis-ci.org/deild/td.svg?branch=master)](https://travis-ci.org/deild/td)
+[![Go Report Card](https://goreportcard.com/badge/github.com/deild/td)](https://goreportcard.com/report/github.com/deild/td)
+[![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](http://godoc.org/github.com/deild/td)
+[![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 > Your todo list in your terminal.
 >

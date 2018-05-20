@@ -1,16 +1,14 @@
 language: go
 go: 1.10.x
 before_install:
-  - go get github.com/magefile/mage
+  - go get -u github.com/magefile/mage
   - mage getvgo
-#  - go get github.com/tcnksm/ghr
-
+install: mage install
 script:
-  - mage -v test
-
-after_success:
+  - mage test
   - mage all
-#  - ghr --username deild --token $GITHUB_TOKEN --replace --prerelease --debug pre-release build/
-
+after_success:
+  - test -n "$TRAVIS_TAG" && curl -sL http://git.io/goreleaser | bash
+  #  - ghr --username deild --token $GITHUB_TOKEN --replace --prerelease --debug pre-release build/
 notifications:
   email: false

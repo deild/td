@@ -9,13 +9,14 @@ import (
 	"github.com/urfave/cli"
 )
 
-const version = "dev"
-
 var (
 	// Hold subcommands
 	cmds []cli.Command
 	// Hold flags
-	flags []cli.Flag
+	flags   []cli.Flag
+	version = "dev"
+	date    = "unknown"
+	commit  = "none"
 )
 
 func init() {
@@ -33,6 +34,11 @@ func init() {
 			Usage: "print all todos",
 		},
 	}
+
+	cli.VersionPrinter = func(c *cli.Context) {
+		fmt.Printf("%s %s\nBuild date: %s\nCommit: %s\n", c.App.Name, c.App.Version, date, commit)
+	}
+
 	cmds = []cli.Command{
 		{
 			Name:      "init",
