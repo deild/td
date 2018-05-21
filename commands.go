@@ -329,7 +329,7 @@ func noSubcommands(c *cli.Context) error {
 
 func printSucces(format string, a ...interface{}) {
 	ct.ChangeColor(ct.Cyan, false, ct.None, false)
-	fmt.Println(format, a)
+	fmt.Printf(format, a...)
 	ct.ResetColor()
 }
 

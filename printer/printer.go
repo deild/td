@@ -8,5 +8,5 @@ const (
 	// KoSign symbol for pending
 	KoSign = "✕"
 	// WpSign symbol for wip
-	WpSign = "✦"
+	WpSign = "•"
 )
