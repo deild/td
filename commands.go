@@ -5,12 +5,13 @@ import (
 	"strconv"
 
 	"github.com/daviddengcn/go-colortext"
+	"github.com/deild/td/db"
 	"github.com/urfave/cli"
 )
 
 // Initialize a collection of todos
 func initialize(c *cli.Context) error {
-	db, err := NewDataStore()
+	db, err := db.NewDataStore()
 	if err != nil {
 		return exitError(err)
 	}

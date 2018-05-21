@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/daviddengcn/go-colortext"
+	"github.com/deild/td/db"
 	"github.com/urfave/cli"
 )
 
@@ -145,7 +146,7 @@ func main() {
 	app.Commands = cmds
 	app.Action = noSubcommands
 	app.After = func(c *cli.Context) error {
-		db, _ := NewDataStore()
+		db, _ := db.NewDataStore()
 		ct.ChangeColor(ct.Magenta, false, ct.None, false)
 		// fmt.Println(fmt.Sprintf("%-25s %s", `to-do file:`, db.Path))
 		fmt.Println(db.Path)
@@ -164,7 +165,7 @@ func main() {
 			}
 		}
 
-		db, err := NewDataStore()
+		db, err := db.NewDataStore()
 		if err != nil {
 			return err
 		}

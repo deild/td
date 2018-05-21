@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/deild/td/db"
 	"github.com/deild/td/helper"
 )
 
@@ -46,7 +47,7 @@ func (c *Collection) RemoveAtIndex(item int) {
 
 // RetrieveTodos load todo from disk
 func (c *Collection) RetrieveTodos() error {
-	db, err := NewDataStore()
+	db, err := db.NewDataStore()
 	if err != nil {
 		return err
 	}
@@ -65,7 +66,7 @@ func (c *Collection) RetrieveTodos() error {
 
 // WriteTodos write the collection on disk
 func (c *Collection) WriteTodos() error {
-	db, err := NewDataStore()
+	db, err := db.NewDataStore()
 	if err != nil {
 		return err
 	}
