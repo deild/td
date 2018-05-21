@@ -4,17 +4,21 @@ import (
 	"fmt"
 	"os"
 	"path"
+
+	"github.com/deild/td/helper"
 )
 
-const ENVDBPATH = "TODO_DB_PATH"
+const envDBPath = "TODO_DB_PATH"
 
+// DataStore structure
 type DataStore struct {
 	Path string
 }
 
+// NewDataStore search the path of database file
 func NewDataStore() (*DataStore, error) {
 	ds := new(DataStore)
-	ds.Path = os.Getenv(ENVDBPATH)
+	ds.Path = os.Getenv(envDBPath)
 
 	if ds.Path == "" {
 		cwd, err := os.Getwd()
@@ -34,7 +38,10 @@ func NewDataStore() (*DataStore, error) {
 		if os.IsExist(err) {
 			if fileInfo.IsDir() {
 				ds.Path = path.Join(ds.Path, ".todos")
-				os.Setenv(ENVDBPATH, ds.Path)
+				err = os.Setenv(envDBPath, ds.Path)
+				if err != nil {
+					return ds, err
+				}
 			}
 		}
 	}
@@ -42,6 +49,7 @@ func NewDataStore() (*DataStore, error) {
 	return ds, nil
 }
 
+// Check if the database file exist
 func (d *DataStore) Check() error {
 	_, err := os.Stat(d.Path)
 	if os.IsNotExist(err) {
@@ -50,31 +58,29 @@ func (d *DataStore) Check() error {
 	return nil
 }
 
+// Initialize the database file
 func (d *DataStore) Initialize() error {
 	var err error
-
 	dir, _ := path.Split(d.Path)
 	_, err = os.Stat(dir)
 	if os.IsNotExist(err) {
-		return fmt.Errorf("%s: One or more directories in this path doesn't exist.", dir)
+		return fmt.Errorf("%s: One or more directories in this path doesn't exist", dir)
 	}
 
 	_, err = os.Stat(d.Path)
 	if os.IsNotExist(err) {
-		w, err := os.Create(d.Path)
+		var w *os.File
+		w, err = os.Create(d.Path)
 		if err != nil {
 			return err
 		}
-		defer w.Close()
+		defer helper.Check(w.Close)
 		_, err = w.WriteString("[]")
 		if err != nil {
 			return err
 		}
-
-	} else {
-		return fmt.Errorf("%s: To-do file has been initialized before. ", d.Path)
+		return w.Sync()
 	}
-
-	return nil
+	return fmt.Errorf("%s: To-do file has been initialized before", d.Path)
 
 }

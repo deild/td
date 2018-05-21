@@ -19,9 +19,7 @@ func initialize(c *cli.Context) error {
 		return exitError(err)
 	}
 
-	ct.ChangeColor(ct.Cyan, false, ct.None, false)
-	fmt.Printf("Initialized empty to-do file as \"%s\".\n", db.Path)
-	ct.ResetColor()
+	printSucces("Initialized empty to-do file as \"%s\".\n", db.Path)
 	return nil
 }
 
@@ -50,9 +48,7 @@ func add(c *cli.Context) error {
 		return exitError(err)
 	}
 
-	ct.ChangeColor(ct.Cyan, false, ct.None, false)
-	fmt.Printf("#%d \"%s\" is now added to your todos.\n", id, c.Args()[0])
-	ct.ResetColor()
+	printSucces("#%d \"%s\" is now added to your todos.\n", id, c.Args()[0])
 	return nil
 }
 
@@ -82,9 +78,7 @@ func modify(c *cli.Context) error {
 		return exitError(err)
 	}
 
-	ct.ChangeColor(ct.Cyan, false, ct.None, false)
-	fmt.Printf("\"%s\" has now a new description: %s\n", c.Args()[0], c.Args()[1])
-	ct.ResetColor()
+	printSucces("\"%s\" has now a new description: %s\n", c.Args()[0], c.Args()[1])
 	return nil
 }
 
@@ -120,12 +114,10 @@ func toggle(c *cli.Context) error {
 	case "wip":
 		status = "marked as work in progress"
 	default:
-		status = todo.Status
+		status = "marked as " + todo.Status
 	}
 
-	ct.ChangeColor(ct.Cyan, false, ct.None, false)
-	fmt.Printf("Your todo %d is now %s.\n", id, status)
-	ct.ResetColor()
+	printSucces("Your todo %d is now %s.\n", id, status)
 	return nil
 }
 
@@ -156,9 +148,7 @@ func search(c *cli.Context) error {
 		}
 		fmt.Println()
 	} else {
-		ct.ChangeColor(ct.Cyan, false, ct.None, false)
-		fmt.Println("There's no todo to show.")
-		ct.ResetColor()
+		printSucces("There's no todo to show.")
 	}
 	return nil
 }
@@ -193,9 +183,7 @@ func reorder(c *cli.Context) error {
 		return exitError(err)
 	}
 
-	ct.ChangeColor(ct.Cyan, false, ct.None, false)
-	fmt.Println("Your list is now reordered.")
-	ct.ResetColor()
+	printSucces("Your list is now reordered.")
 	return nil
 
 }
@@ -244,9 +232,7 @@ func swap(c *cli.Context) error {
 		return exitError(err)
 	}
 
-	ct.ChangeColor(ct.Cyan, false, ct.None, false)
-	fmt.Printf("\"%s\" and \"%s\" has been swapped\n", c.Args()[0], c.Args()[1])
-	ct.ResetColor()
+	printSucces("\"%s\" and \"%s\" has been swapped\n", c.Args()[0], c.Args()[1])
 
 	return nil
 }
@@ -285,9 +271,7 @@ func wip(c *cli.Context) error {
 		status = todo.Status
 	}
 
-	ct.ChangeColor(ct.Cyan, false, ct.None, false)
-	fmt.Printf("Your todo %d is now %s.\n", id, status)
-	ct.ResetColor()
+	printSucces("Your todo %d is now %s.\n", id, status)
 	return nil
 }
 
@@ -299,16 +283,56 @@ func clean(c *cli.Context) error {
 		return exitError(err)
 	}
 
-	if err := collection.RemoveFinishedTodos(); err != nil {
-		return exitError(err)
-	}
+	collection.RemoveFinishedTodos()
 
 	if err := collection.WriteTodos(); err != nil {
 		return exitError(err)
 	}
 
-	ct.ChangeColor(ct.Cyan, false, ct.None, false)
-	fmt.Println("Your list is now flushed of finished todos.")
-	ct.ResetColor()
+	printSucces("Your list is now flushed of finished todos.")
 	return nil
+}
+
+func noSubcommands(c *cli.Context) error {
+
+	collection, err := NewCollection()
+	if err != nil {
+		return exitError(err)
+	}
+
+	if !c.IsSet("all") {
+		switch {
+		case c.IsSet("done"):
+			collection.ListDoneTodos()
+		case c.IsSet("wip"):
+			collection.ListWorkInProgressTodos()
+		default:
+			collection.ListUndoneTodos()
+		}
+	}
+
+	if len(collection.Todos) > 0 {
+		fmt.Println()
+		for _, todo := range collection.Todos {
+			todo.MakeOutput(true)
+		}
+		fmt.Println()
+
+	} else {
+		ct.ChangeColor(ct.Yellow, false, ct.None, false)
+		fmt.Println("There's no todo to show.")
+		ct.ResetColor()
+	}
+	return nil
+}
+
+func printSucces(format string, a ...interface{}) {
+	ct.ChangeColor(ct.Cyan, false, ct.None, false)
+	fmt.Println(format, a)
+	ct.ResetColor()
+}
+
+func exitError(message error) *cli.ExitError {
+	ct.ChangeColor(ct.Red, false, ct.None, false)
+	return cli.NewExitError(message, 1)
 }

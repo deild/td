@@ -10,10 +10,7 @@ import (
 	p "github.com/deild/td/printer"
 )
 
-// Done Todo status
-const Done = "done"
-
-//Todo todo's structure
+// Todo todo's structure
 type Todo struct {
 	ID       int64  `json:"id"`
 	Desc     string `json:"desc"`
@@ -21,6 +18,7 @@ type Todo struct {
 	Modified string `json:"modified"`
 }
 
+// NewTodo create a pending todo
 func NewTodo() *Todo {
 	var todo = new(Todo)
 	todo.Status = PENDING
@@ -33,10 +31,10 @@ func (t *Todo) MakeOutput(useColor bool) {
 	var color ct.Color
 
 	switch t.Status {
-	case Done:
+	case DONE:
 		color = ct.Green
 		symbole = p.OkSign
-	case "wip":
+	case WIP:
 		color = ct.Blue
 		symbole = p.WpSign
 	default:

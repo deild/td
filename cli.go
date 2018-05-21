@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -13,7 +14,9 @@ var (
 	// Hold subcommands
 	cmds []cli.Command
 	// Hold flags
-	flags   []cli.Flag
+	flags []cli.Flag
+	// Hold authors
+	authors []cli.Author
 	version = "dev"
 	date    = "unknown"
 	commit  = "none"
@@ -79,12 +82,14 @@ func init() {
 			Name:      "clean",
 			ShortName: "c",
 			Usage:     "Remove finished todos from the list",
+			UsageText: "td clean",
 			Action:    clean,
 		},
 		{
 			Name:      "reorder",
 			ShortName: "r",
 			Usage:     "Reset ids of todo",
+			UsageText: "td reset [-exact id2 id1]",
 			Flags: []cli.Flag{
 				cli.BoolFlag{
 					Name:  "exact, e",
@@ -108,7 +113,24 @@ func init() {
 			Action:    search,
 		},
 	}
-
+	authors = []cli.Author{
+		cli.Author{
+			Name:  "Tolvä",
+			Email: "tolva@tuta.io",
+		},
+		cli.Author{
+			Name:  "Gaël Gillard",
+			Email: "gael@gaelgillard.com",
+		},
+		cli.Author{
+			Name:  "Tarcísio Gruppi",
+			Email: "txgruppi@gmail.com",
+		},
+		cli.Author{
+			Name:  "Victor Alves",
+			Email: "victor.alves@sentia.com",
+		},
+	}
 }
 
 func main() {
@@ -117,48 +139,11 @@ func main() {
 	app.Usage = "Your todos manager"
 	app.Version = version
 	app.Compiled = time.Now()
-	app.Authors = []cli.Author{
-		cli.Author{
-			Name:  "Gaël Gillard",
-			Email: "gael@gaelgillard.com",
-		},
-	}
+	app.Authors = authors
+	app.Copyright = "Copyright (c) 2018 Tolvä"
 	app.Flags = flags
 	app.Commands = cmds
-	app.Action = func(c *cli.Context) error {
-
-		collection, err := NewCollection()
-		if err != nil {
-			return exitError(err)
-		}
-
-		if !c.IsSet("all") {
-			switch {
-			case c.IsSet("done"):
-				collection.ListDoneTodos()
-
-			case c.IsSet("wip"):
-				collection.ListWorkInProgressTodos()
-
-			default:
-				collection.ListUndoneTodos()
-			}
-		}
-
-		if len(collection.Todos) > 0 {
-			fmt.Println()
-			for _, todo := range collection.Todos {
-				todo.MakeOutput(true)
-			}
-			fmt.Println()
-
-		} else {
-			ct.ChangeColor(ct.Cyan, false, ct.None, false)
-			fmt.Println("There's no todo to show.")
-			ct.ResetColor()
-		}
-		return nil
-	}
+	app.Action = noSubcommands
 	app.After = func(c *cli.Context) error {
 		db, _ := NewDataStore()
 		ct.ChangeColor(ct.Magenta, false, ct.None, false)
@@ -211,10 +196,8 @@ ERROR:
 		return nil
 	}
 
-	app.Run(os.Args)
-}
-
-func exitError(message error) *cli.ExitError {
-	ct.ChangeColor(ct.Red, false, ct.None, false)
-	return cli.NewExitError(message, 1)
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

@@ -8,10 +8,17 @@ import (
 	"regexp"
 	"strconv"
 	"time"
+
+	"github.com/deild/td/helper"
 )
 
+// WIP status
 const WIP = "wip"
+
+// DONE status
 const DONE = "done"
+
+// PENDING status
 const PENDING = "pending"
 
 //Collection of todo
@@ -19,9 +26,9 @@ type Collection struct {
 	Todos []*Todo
 }
 
+// NewCollection create a new collection
 func NewCollection() (*Collection, error) {
-	var collection *Collection
-	collection = new(Collection)
+	var collection = new(Collection)
 
 	if err := collection.RetrieveTodos(); err != nil {
 		return nil, err
@@ -43,7 +50,7 @@ func (c *Collection) RetrieveTodos() error {
 	if err != nil {
 		return err
 	}
-	if err := db.Check(); err != nil {
+	if err = db.Check(); err != nil {
 		return err
 	}
 
@@ -51,7 +58,7 @@ func (c *Collection) RetrieveTodos() error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer helper.Check(file.Close)
 	err = json.NewDecoder(file).Decode(&c.Todos)
 	return err
 }
@@ -67,7 +74,7 @@ func (c *Collection) WriteTodos() error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer helper.Check(file.Close)
 	data, err := json.MarshalIndent(&c.Todos, "", "  ")
 	if err != nil {
 		return err
@@ -78,6 +85,7 @@ func (c *Collection) WriteTodos() error {
 	return file.Sync()
 }
 
+// ListPendingTodos keep only pending todo
 func (c *Collection) ListPendingTodos() error {
 	for i := len(c.Todos) - 1; i >= 0; i-- {
 		if c.Todos[i].Status != PENDING {
@@ -87,24 +95,25 @@ func (c *Collection) ListPendingTodos() error {
 	return nil
 }
 
-func (c *Collection) ListUndoneTodos() error {
+// ListUndoneTodos remove finished todos from the list
+func (c *Collection) ListUndoneTodos() {
 	for i := len(c.Todos) - 1; i >= 0; i-- {
 		if c.Todos[i].Status == DONE {
 			c.RemoveAtIndex(i)
 		}
 	}
-	return nil
 }
 
-func (c *Collection) ListDoneTodos() error {
+// ListDoneTodos keep only done todo
+func (c *Collection) ListDoneTodos() {
 	for i := len(c.Todos) - 1; i >= 0; i-- {
 		if c.Todos[i].Status != DONE {
 			c.RemoveAtIndex(i)
 		}
 	}
-	return nil
 }
 
+// ListWorkInProgressTodos keep only wip todo
 func (c *Collection) ListWorkInProgressTodos() {
 	for i := len(c.Todos) - 1; i >= 0; i-- {
 		if c.Todos[i].Status != WIP {
@@ -113,10 +122,10 @@ func (c *Collection) ListWorkInProgressTodos() {
 	}
 }
 
-// CreateTodo new todo in the collection
+// CreateTodo new todo in the list
 func (c *Collection) CreateTodo(newTodo *Todo) (int64, error) {
 	var err error
-	var highestID int64 = 0
+	var highestID int64
 	for _, todo := range c.Todos {
 		if todo.ID > highestID {
 			highestID = todo.ID
@@ -145,6 +154,7 @@ func (c *Collection) Find(id int64) (foundedTodo *Todo, err error) {
 	return
 }
 
+// SetStatus set status of todo for id
 func (c *Collection) SetStatus(id int64, status string) (*Todo, error) {
 
 	todo, err := c.Find(id)
@@ -160,6 +170,7 @@ func (c *Collection) SetStatus(id int64, status string) (*Todo, error) {
 	return todo, err
 }
 
+// Toggle the status of a todo by giving his id
 func (c *Collection) Toggle(id int64) (*Todo, error) {
 	var status string
 
@@ -181,7 +192,7 @@ func (c *Collection) Toggle(id int64) (*Todo, error) {
 	return c.SetStatus(id, status)
 }
 
-// Modify the desc of the todo find by id
+// Modify the text of an existing todo
 func (c *Collection) Modify(id int64, desc string) (*Todo, error) {
 	todo, err := c.Find(id)
 
@@ -195,10 +206,9 @@ func (c *Collection) Modify(id int64, desc string) (*Todo, error) {
 	return todo, err
 }
 
-// RemoveFinishedTodos delete completed todos
-func (c *Collection) RemoveFinishedTodos() error {
-	return c.ListUndoneTodos()
-
+// RemoveFinishedTodos remove finished todos from the list
+func (c *Collection) RemoveFinishedTodos() {
+	c.ListUndoneTodos()
 }
 
 // Reorder the collection
@@ -242,6 +252,7 @@ func (c *Collection) Search(sentence string) {
 	}
 }
 
+// ReorderByIDs the list according to the specified IDs
 func (c *Collection) ReorderByIDs(ids []int64) error {
 	idsMap := map[int64]int{}
 	for index, id := range ids {

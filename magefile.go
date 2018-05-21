@@ -11,9 +11,10 @@ import (
 	"github.com/magefile/mage/sh"
 )
 
+// nolint: deadcode
 var (
-	// nolint
-	Default   = Build
+	// nolint: deadcode
+	Default   = Build // nolint: deadcode
 	version   = "snapshot"
 	buildDate = time.Now().UTC().Format(time.RFC3339)
 	commit    = "none"
@@ -43,6 +44,10 @@ func Clean() { // nolint: deadcode
 		fmt.Println(err)
 	}
 	err = os.RemoveAll("dist")
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = os.RemoveAll("vendor")
 	if err != nil {
 		fmt.Println(err)
 	}
