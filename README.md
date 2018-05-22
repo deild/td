@@ -38,18 +38,23 @@ USAGE:
 VERSION:
    1.4.0
 
-AUTHOR:
-  Gaël Gillard - <gael@gaelgillard.com>
+AUTHORS:
+   Tolvä <tolva@tuta.io>
+   Gaël Gillard <gael@gaelgillard.com>
+   Tarcísio Gruppi <txgruppi@gmail.com>
+   Victor Alves <victor.alves@sentia.com>
 
 COMMANDS:
-   init, i  Initialize a collection of todos
-   add, a   Add a new todo
-   modify, m   Modify the text of an existing todo
-   toggle, t   Toggle the status of a todo by giving his id
-   clean Remove finished todos from the list
-   reorder, r  Reset ids of todo or swap the position of two todo
-   search, s   Search a string in all todos
-   help, h  Shows a list of commands or help for one command
+     init, i     Initialize a collection of todos. If not path defined, it will create a file named .todos in the current directory.
+     add, a      Add a new todo
+     modify, m   Modify the text of an existing todo
+     toggle, t   Toggle the status of a todo by giving his id
+     wip, w      Change the status of a todo to "Work In Progress" by giving its id
+     clean, c    Remove finished todos from the list
+     reorder, r  Reset ids of todo
+     swap, sw    Swap the position of two todos
+     search, s   Search a string in all todos
+     help, h     Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
    --done, -d     print done todos
@@ -57,4 +62,7 @@ GLOBAL OPTIONS:
    --all, -a      print all todos
    --help, -h     show help
    --version, -v  print the version
+
+COPYRIGHT:
+   Copyright (c) 2018 Tolvä
 ```

@@ -10,6 +10,9 @@ archive:
   replacements:
     amd64: x86_64
     darwin: macOS
+  format_overrides:
+    - goos: windows
+      format: zip
   files:
     - LICENSE
 checksum:

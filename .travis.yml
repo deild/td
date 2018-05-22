@@ -4,12 +4,9 @@ before_install:
   - go get github.com/mattn/goveralls
   - go get -u github.com/magefile/mage
   - mage getvgo
-install: mage install
+install: true
 script:
   - mage all
   - goveralls -service=travis-ci
-after_success:
-  - test -n "$TRAVIS_TAG" && curl -sL http://git.io/goreleaser | bash
-  #  - ghr --username deild --token $GITHUB_TOKEN --replace --prerelease --debug pre-release build/
 notifications:
   email: false

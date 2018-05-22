@@ -31,7 +31,7 @@ func init() {
 		},
 		cli.BoolFlag{
 			Name:  "wip, w",
-			Usage: "print working in progress todos",
+			Usage: "print work in progress todos",
 		},
 		cli.BoolFlag{
 			Name:  "all, a",
@@ -139,7 +139,7 @@ func main() {
 	app.Name = "td"
 	app.Usage = "Your todos manager"
 	app.Version = version
-	app.Compiled = time.Now()
+	app.Compiled = time.Now().UTC()
 	app.Authors = authors
 	app.Copyright = "Copyright (c) 2018 Tolvä"
 	app.Flags = flags
