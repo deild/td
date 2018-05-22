@@ -20,9 +20,18 @@ var (
 	commit    = "none"
 )
 
-// Start by installing vgo
-func Getvgo() error { // nolint: deadcode
-	return sh.RunV("go", "get", "-u", "golang.org/x/vgo")
+// Start by installing vgo,
+func Init() error { // nolint: deadcode
+	if err := sh.RunV("go", "get", "-u", "gopkg.in/alecthomas/gometalinter.v2"); err != nil {
+		return err
+	}
+	if err := sh.Run("gometalinter.v2", "--install"); err != nil {
+		return err
+	}
+	if err := sh.RunV("go", "get", "-u", "golang.org/x/vgo"); err != nil {
+		return err
+	}
+	return sh.RunV("vgo", "vendor")
 }
 
 // A build step that requires additional params,
@@ -54,21 +63,9 @@ func All() { // nolint: deadcode
 	mg.Deps(Build, Lint, Test)
 }
 
-func getLint() error {
-	if err := sh.RunV("go", "get", "-u", "gopkg.in/alecthomas/gometalinter.v2"); err != nil {
-		return err
-	}
-	return sh.Run("gometalinter.v2", "--install")
-}
-
-func getVendor() error {
-	return sh.RunV("vgo", "vendor")
-}
-
 // Run Go Meta Linter
 func Lint() error { // nolint: deadcode
-	mg.Deps(getLint, getVendor)
-	return sh.RunV("gometalinter.v2", "./...")
+	return sh.RunV("gometalinter.v2", "--vendor", "./...")
 }
 
 // Run tests

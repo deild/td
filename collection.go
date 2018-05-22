@@ -47,15 +47,15 @@ func (c *Collection) RemoveAtIndex(item int) {
 
 // RetrieveTodos load todo from disk
 func (c *Collection) RetrieveTodos() error {
-	db, err := db.NewDataStore()
+	data, err := db.NewDataStore()
 	if err != nil {
 		return err
 	}
-	if err = db.Check(); err != nil {
+	if err = data.Check(); err != nil {
 		return err
 	}
 
-	file, err := os.OpenFile(db.Path, os.O_RDONLY, 0600)
+	file, err := os.OpenFile(data.Path, os.O_RDONLY, 0600)
 	if err != nil {
 		return err
 	}
@@ -66,21 +66,21 @@ func (c *Collection) RetrieveTodos() error {
 
 // WriteTodos write the collection on disk
 func (c *Collection) WriteTodos() error {
-	db, err := db.NewDataStore()
+	data, err := db.NewDataStore()
 	if err != nil {
 		return err
 	}
 
-	file, err := os.OpenFile(db.Path, os.O_RDWR|os.O_TRUNC, 0600)
+	file, err := os.OpenFile(data.Path, os.O_RDWR|os.O_TRUNC, 0600)
 	if err != nil {
 		return err
 	}
 	defer helper.Check(file.Close)
-	data, err := json.MarshalIndent(&c.Todos, "", "  ")
+	dataM, err := json.MarshalIndent(&c.Todos, "", "  ")
 	if err != nil {
 		return err
 	}
-	if _, err = file.Write(data); err != nil {
+	if _, err = file.Write(dataM); err != nil {
 		return err
 	}
 	return file.Sync()

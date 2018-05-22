@@ -146,10 +146,9 @@ func main() {
 	app.Commands = cmds
 	app.Action = noSubcommands
 	app.After = func(c *cli.Context) error {
-		db, _ := db.NewDataStore()
+		data, _ := db.NewDataStore()
 		ct.ChangeColor(ct.Magenta, false, ct.None, false)
-		// fmt.Println(fmt.Sprintf("%-25s %s", `to-do file:`, db.Path))
-		fmt.Println(db.Path)
+		fmt.Println(data.Path)
 		ct.ResetColor()
 		return nil
 	}
@@ -165,12 +164,12 @@ func main() {
 			}
 		}
 
-		db, err := db.NewDataStore()
+		data, err := db.NewDataStore()
 		if err != nil {
 			return err
 		}
 
-		if err := db.Check(); err != nil {
+		if err := data.Check(); err != nil {
 			errDS := fmt.Errorf(`
 ===============================================================================
 
@@ -189,7 +188,7 @@ ERROR:
 
 ===============================================================================
 
-				 `, db.Path)
+				 `, data.Path)
 
 			return cli.NewExitError(errDS, 1)
 		}
