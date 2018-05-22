@@ -70,7 +70,7 @@ func Lint() error { // nolint: deadcode
 
 // Run tests
 func Test() error { // nolint: deadcode
-	return sh.RunV("vgo", "test", "./...")
+	return sh.RunV("vgo", "test", "-race", "-coverprofile=coverage.txt", "-covermode=atomic", "./...")
 }
 
 func ldflags() string {

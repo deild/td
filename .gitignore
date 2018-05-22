@@ -4,3 +4,4 @@ build
 .todos
 dist
 vendor
+coverage.txt
