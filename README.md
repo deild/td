@@ -8,6 +8,7 @@
 
 [![Travis](https://travis-ci.org/deild/td.svg?branch=master)](https://travis-ci.org/deild/td)
 [![Coverage Status](https://coveralls.io/repos/github/deild/td/badge.svg?branch=master)](https://coveralls.io/github/deild/td?branch=master)
+[![codecov](https://codecov.io/gh/deild/td/branch/master/graph/badge.svg)](https://codecov.io/gh/deild/td)
 [![CodeFactor](https://www.codefactor.io/repository/github/deild/td/badge)](https://www.codefactor.io/repository/github/deild/td)
 [![Go Report Card](https://goreportcard.com/badge/github.com/deild/td)](https://goreportcard.com/report/github.com/deild/td)
 

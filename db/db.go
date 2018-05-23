@@ -8,7 +8,8 @@ import (
 	"github.com/deild/td/helper"
 )
 
-const envDBPath = "TODO_DB_PATH"
+// EnvDBPath environnement variable name for todo DB file
+const EnvDBPath = "TODO_DB_PATH"
 
 // DataStore structure
 type DataStore struct {
@@ -18,7 +19,7 @@ type DataStore struct {
 // NewDataStore search the path of database file
 func NewDataStore() (*DataStore, error) {
 	ds := new(DataStore)
-	ds.Path = os.Getenv(envDBPath)
+	ds.Path = os.Getenv(EnvDBPath)
 
 	if ds.Path == "" {
 		cwd, err := os.Getwd()
@@ -38,7 +39,7 @@ func NewDataStore() (*DataStore, error) {
 		if os.IsExist(err) {
 			if fileInfo.IsDir() {
 				ds.Path = path.Join(ds.Path, ".todos")
-				err = os.Setenv(envDBPath, ds.Path)
+				err = os.Setenv(EnvDBPath, ds.Path)
 				if err != nil {
 					return ds, err
 				}

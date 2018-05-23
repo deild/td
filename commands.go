@@ -11,16 +11,16 @@ import (
 
 // Initialize a collection of todos
 func initialize(c *cli.Context) error {
-	db, err := db.NewDataStore()
+	ds, err := db.NewDataStore()
 	if err != nil {
 		return exitError(err)
 	}
 
-	if err := db.Initialize(); err != nil {
+	if err := ds.Initialize(); err != nil {
 		return exitError(err)
 	}
 
-	printSucces("Initialized empty to-do file as \"%s\".\n", db.Path)
+	printSucces("Initialized empty to-do file as \"%s\".\n", ds.Path)
 	return nil
 }
 

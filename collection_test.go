@@ -2,10 +2,77 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"path"
 	"testing"
+	"time"
+
+	"github.com/deild/td/db"
 )
 
 var statuses = []string{PENDING, DONE, WIP}
+
+func createTmpTodo(t *testing.T) {
+	cwd, _ := os.Getwd()
+	extra := fmt.Sprint("/TODOtestingFOLDER/", time.Now().Format("20060102150405"))
+	os.Setenv(db.EnvDBPath, path.Join(path.Join(cwd, extra), ".todos"))
+	os.MkdirAll(path.Join(cwd, extra), 0700)
+	ds, err := db.NewDataStore()
+	if err != nil {
+		t.Error("error on NewCollection", err)
+	}
+	fmt.Println(os.Getenv(db.EnvDBPath))
+	if err := ds.Initialize(); err != nil {
+		t.Error("error on NewCollection", err)
+	}
+}
+
+func removeTmpTodo() {
+	cwd, _ := os.Getwd()
+	os.RemoveAll(path.Join(cwd, "/TODOtestingFOLDER/"))
+	os.Unsetenv(db.EnvDBPath)
+}
+func TestNewCollection(t *testing.T) {
+	createTmpTodo(t)
+	_, err := NewCollection()
+	if err != nil {
+		t.Error("error on NewCollection", err)
+	}
+	removeTmpTodo()
+}
+
+func TestWriteTodos(t *testing.T) {
+	createTmpTodo(t)
+	var collection Collection
+	var todos []*Todo
+
+	task := NewTodo()
+	task.ID = 1
+	task.Status = PENDING
+	todos = append(todos, task)
+	collection.Todos = todos
+	err := collection.WriteTodos()
+	if err != nil {
+		t.Error("error can't WriteTodos", err)
+	}
+	removeTmpTodo()
+}
+
+func TestCreateTodo(t *testing.T) {
+	createTmpTodo(t)
+	collection, _ := NewCollection()
+	task := NewTodo()
+	task.ID = 1
+	task.Status = PENDING
+	id, err := collection.CreateTodo(task)
+	if err != nil {
+		t.Error("error can't WriteTodos", err)
+	}
+	if id != 1 {
+		t.Errorf("expected 1, got %d.", id)
+	}
+	removeTmpTodo()
+}
 
 func TestListPendingTodos(t *testing.T) {
 	var collection Collection
@@ -148,6 +215,22 @@ func TestSetStatus(t *testing.T) {
 	}
 }
 
+func TestCantSetStatus(t *testing.T) {
+	var collection Collection
+	var todos []*Todo
+
+	task := NewTodo()
+	task.ID = 1
+	task.Status = PENDING
+	todos = append(todos, task)
+	collection.Todos = todos
+
+	_, err := collection.SetStatus(2, DONE)
+	if err == nil {
+		t.Errorf("Expected can't set status, got set status instead.")
+	}
+}
+
 func TestTodoModifyDescription(t *testing.T) {
 	var collection Collection
 	var todos []*Todo
@@ -250,4 +333,93 @@ func TestRemoveAtIndex(t *testing.T) {
 	if len(collection.Todos) != len(todos)-1 {
 		t.Errorf("Expected size of current to-dos to one less then original slice, but it was %d and the other %d", len(collection.Todos), len(todos))
 	}
+}
+
+func TestDontFind(t *testing.T) {
+	var collection Collection
+	var todos []*Todo
+
+	task := NewTodo()
+	task.ID = 1
+	task.Status = PENDING
+	todos = append(todos, task)
+	collection.Todos = todos
+
+	_, err := collection.Find(2)
+	if err == nil {
+		t.Error("Expect don't find item 2, but it find")
+		t.FailNow()
+	}
+
+	_, err = collection.Find(1)
+	if err != nil {
+		t.Errorf("Expect find item 1, but this happened: %s", err)
+		t.FailNow()
+	}
+}
+
+func TestRemoveFinishedTodos(t *testing.T) {
+	var collection Collection
+	var todos []*Todo
+
+	for id := range make([]int, len(statuses)) {
+		task := NewTodo()
+		task.ID = int64(id)
+		task.Status = statuses[id]
+		todos = append(todos, task)
+	}
+	collection.Todos = todos
+	collection.RemoveFinishedTodos()
+
+	if len(collection.Todos) != 2 {
+		t.Error("Expected only one task, got", len(collection.Todos))
+	}
+
+	for _, td := range collection.Todos {
+		if td.Status != PENDING && td.Status != WIP {
+			t.Errorf("Expected status of tasks to be only \"pending\" or \"work in progress\", got at least one as \"%s\"", td.Status)
+		}
+	}
+}
+
+func TestSearchMatch(t *testing.T) {
+	var collection Collection
+	var todos []*Todo
+
+	task := NewTodo()
+	task.ID = 1
+	task.Status = PENDING
+	task.Desc = "Match"
+	todos = append(todos, task)
+	collection.Todos = todos
+
+	collection.Search("Ma")
+	if len(collection.Todos) != 1 {
+		t.Error("Expected only one task, got", len(collection.Todos))
+	}
+}
+
+func TestReorder(t *testing.T) {
+	var collection Collection
+	var todos []*Todo
+
+	for id := range make([]int, len(statuses)) {
+		task := NewTodo()
+		task.ID = int64(id)
+		task.Status = statuses[id]
+		todos = append(todos, task)
+	}
+	collection.Todos = todos
+	collection.Reorder()
+
+	if len(collection.Todos) != 3 {
+		t.Error("Expected 3 tasks, got", len(collection.Todos))
+	}
+
+	for l := range make([]int, len(statuses)) {
+		if collection.Todos[l].ID != int64(l+1) {
+			t.Errorf("Expected ID of tasks %d, got %d", l, collection.Todos[l].ID)
+		}
+	}
+
 }

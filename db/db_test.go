@@ -11,23 +11,23 @@ import (
 func TestWhenFileDoesntExist(t *testing.T) {
 	cwd, _ := os.Getwd()
 	extra := fmt.Sprint("/TODOtestingFOLDER/", time.Now().Format("20060102150405"))
-	os.Setenv(envDBPath, path.Join(cwd, extra))
-	db, _ := NewDataStore()
-	if db.Check() == nil {
+	os.Setenv(EnvDBPath, path.Join(cwd, extra))
+	ds, _ := NewDataStore()
+	if ds.Check() == nil {
 		t.Errorf("Expected database check to return error, but it didn't.")
 	}
-	os.Unsetenv(envDBPath)
+	os.Unsetenv(EnvDBPath)
 }
 
 func TestWhenDirExist(t *testing.T) {
 	cwd, _ := os.Getwd()
 	extra := fmt.Sprint("/TODOtestingFOLDER/", time.Now().Format("20060102150405"))
-	os.Setenv(envDBPath, path.Join(cwd, extra))
+	os.Setenv(EnvDBPath, path.Join(cwd, extra))
 	os.MkdirAll(path.Join(cwd, extra), 0700)
-	db, _ := NewDataStore()
-	if db.Check() != nil {
+	ds, _ := NewDataStore()
+	if ds.Check() != nil {
 		t.Errorf("Expected database check to return nil, but it didn't.")
 	}
 	os.RemoveAll(path.Join(cwd, "/TODOtestingFOLDER/"))
-	os.Unsetenv(envDBPath)
+	os.Unsetenv(EnvDBPath)
 }
