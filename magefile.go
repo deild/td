@@ -76,12 +76,12 @@ func Test() error { // nolint: deadcode
 func ldflags() string {
 	commit, err := sh.Output("git", "rev-parse", "--short", "HEAD")
 	if err != nil {
-		fmt.Printf("WARNING: git rev-parse --short HEAD error:", err)
+		fmt.Print("WARNING: git rev-parse --short HEAD error:", err)
 	}
 
 	version, err := sh.Output("git", "describe", "--tags")
 	if err != nil {
-		fmt.Printf("WARNING: git describe --tags error:", err)
+		fmt.Print("WARNING: git describe --tags error:", err)
 	}
 
 	return fmt.Sprintf("-s -w -X main.date=%s -X main.commit=%s -X main.version=%s", buildDate, commit, version)
@@ -106,4 +106,9 @@ func Release() (err error) { // nolint: deadcode
 		}
 	}()
 	return sh.RunV("goreleaser")
+}
+
+// Create a snapshot with goreleaser
+func Snapshot() error { // nolint: deadcode
+	return sh.RunV("goreleaser", "--rm-dist", "--snapshot")
 }

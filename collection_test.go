@@ -71,6 +71,16 @@ func TestCreateTodo(t *testing.T) {
 	if id != 1 {
 		t.Errorf("expected 1, got %d.", id)
 	}
+	task = NewTodo()
+	task.ID = 2
+	task.Status = PENDING
+	id, err = collection.CreateTodo(task)
+	if err != nil {
+		t.Error("error can't WriteTodos", err)
+	}
+	if id != 2 {
+		t.Errorf("expected 2, got %d.", id)
+	}
 	removeTmpTodo()
 }
 
@@ -270,16 +280,9 @@ func TestTodoModifyDescription(t *testing.T) {
 	}
 }
 
-func TestTodoSwap(t *testing.T) {
+func collectionFromTaskDesk(taskDesc []string) (Collection, []*Todo) {
 	var collection Collection
 	var todos []*Todo
-
-	taskDesc := []string{
-		"Test 1",
-		"Test 2",
-		"Test 3",
-		"Test 4",
-	}
 
 	for id := range make([]int, len(taskDesc)) {
 		task := NewTodo()
@@ -288,6 +291,18 @@ func TestTodoSwap(t *testing.T) {
 		todos = append(todos, task)
 	}
 	collection.Todos = todos
+	return collection, todos
+}
+func TestTodoSwap(t *testing.T) {
+
+	taskDesc := []string{
+		"Test 1",
+		"Test 2",
+		"Test 3",
+		"Test 4",
+	}
+
+	collection, _ := collectionFromTaskDesk(taskDesc)
 	collection.Swap(2, 4)
 
 	secondTodo, err := collection.Find(2)
@@ -312,23 +327,13 @@ func TestTodoSwap(t *testing.T) {
 }
 
 func TestRemoveAtIndex(t *testing.T) {
-	var collection Collection
-	var todos []*Todo
-
 	taskDesc := []string{
 		"Test 1",
 		"Test 2",
 		"Test 3",
 		"Test 4",
 	}
-
-	for id := range make([]int, len(taskDesc)) {
-		task := NewTodo()
-		task.ID = int64(id + 1)
-		task.Desc = taskDesc[id]
-		todos = append(todos, task)
-	}
-	collection.Todos = todos
+	collection, todos := collectionFromTaskDesk(taskDesc)
 	collection.RemoveAtIndex(2)
 	if len(collection.Todos) != len(todos)-1 {
 		t.Errorf("Expected size of current to-dos to one less then original slice, but it was %d and the other %d", len(collection.Todos), len(todos))
